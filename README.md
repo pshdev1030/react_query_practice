@@ -327,3 +327,30 @@ staleTime이 지나 다시 query에 접근할 경우 데이터를 실제로 요�
 | true      | true       | 캐시가 없어서 서버로부터 전달받은 데이터를 반환 |
 | false     | false      | 캐시된 데이터를 반환                            |
 | false     | true       | 서버로부터 전달받은 데이터로 재 캐시하여 반환   |
+
+# 8 Refetch Defaults
+
+useQuery의 세 번째 parameter인 option엔 refetchOnMount와 refetchOnWindowFocus 옵션도 있다.
+
+refetchOnMount는 데이터가 stale 상태일 경우 마운트 시 마다 refetch를 실행하는 옵션이다.
+
+기본값은 true이며 always로 설정하면 stale 상태와 상관없이 마운트 시 마다 매번 refetch를 실행한다.
+
+refetchOnWindowFocus는 데이터가 stale 상태일 경우 윈도우가 포커싱 될 때 마다 refetch를 실행하는 옵션이다.
+
+다른 탭을 눌렀다가 다시 돌아왔을 때, 혹은 개발자 도구를 포커싱 하다가 페이지 내부를 다시 포커싱 했을 경우에 해당한다.
+
+마찬가지로 기본값은 true이며 always로 설정하면 stale 상태와 상관없이 윈도우 포커싱마다 refetch를 실행한다.
+
+```js
+const { isLoading, data, isError, error, isFetching } = useQuery(
+  "super-heroes",
+  fetchSuperHeroes,
+  {
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    staleTime: 10000,
+    cacheTime: 5000,
+  }
+);
+```
