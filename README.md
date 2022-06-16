@@ -288,3 +288,42 @@ export const RQSuperHeroesPage = () => {
 쿼리가 활성화되어 있을 경우 Observer를 통해 캐시를 유지한다.
 
 캐시가 활성화 상태에서 벗어날 경우 GC의 대상이 되며 cacheTime(5000ms) 뒤에 캐시도 삭제된다.
+
+# 7 Stale Time
+
+react query는 기본적으로 불러온 데이터를 Stale하지 않다고 생각한다.
+
+Stale 하다는 것은 변경대상이 아니라는 것이다. 즉 제일 최신의 데이터라는 의미이다.
+
+이는 useQuery의 3번째 parameter인 option 객체의 staleTime 속성으로 제어한다.
+
+staleTime으로 설정한 시간만큼 데이터가 최신의(신선한) 데이터라고 간주한다.
+
+이 시간이 지나면 변경(refetch)이 필요한 데이터로 간주하기 때문에 같은 데이터를 필요로 할 때 api 요청을 다시 할 수 밖에 없다.
+
+그러나 staleTime을 길게 주어도 저장되는 시간인 cacheTime이 짧다면 데이터가 사라지기 때문에 다시 요청을 해야 한다.
+
+react query의 useQuery의 3번째 option 객체의 staleTime 기본값은 0이고 cacheTime은 5분이다.
+
+```js
+const { isLoading, data, isError, error } = useQuery(
+  "super-heroes",
+  fetchSuperHeroes,
+  {
+    staleTime: 10000,
+    cacheTime: 5000,
+  }
+);
+```
+
+이런 경우 staleTime은 10초로 데이터를 fetch하고 staleTime 내에는 다시 데이터를 불러오더라도 isLoading과 isFetching 모두 false이다.( 즉 서버에 데이터를 요청하지 않고 캐시된 데이터를 신뢰하여 가져온다.)
+
+staleTime이 지나 다시 query에 접근할 경우 데이터를 실제로 요청하기 때문에 isLoading은 false, isFetching은 true가 되어 실제 데이터를 요청하여 다시 캐시한다.
+
+정리하자면 다음과 같은 세 가지 상태를 갖는다.
+
+| isLoading | isFetching | 상태                                            |
+| --------- | ---------- | ----------------------------------------------- |
+| true      | true       | 캐시가 없어서 서버로부터 전달받은 데이터를 반환 |
+| false     | false      | 캐시된 데이터를 반환                            |
+| false     | true       | 서버로부터 전달받은 데이터로 재 캐시하여 반환   |
