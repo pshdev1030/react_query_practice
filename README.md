@@ -349,8 +349,45 @@ const { isLoading, data, isError, error, isFetching } = useQuery(
   {
     refetchOnMount: true,
     refetchOnWindowFocus: true,
-    staleTime: 10000,
-    cacheTime: 5000,
+  }
+);
+```
+
+# 9 Polling
+
+Polling은 일정 주기마다 데이터를 refetch 하는 것을 의미한다.
+
+Server State와 Client State가 동기화 되어야 할 경우 사용한다.
+
+마찬가지로 useQuery의 option 객체에 refetchInterval 속성을 통해 설정할 수 있다. 기본값은 false이며 정수값(ms)을 가진다.
+
+refetchIntervalInBackground 속성은 브라우저가 focus 되어있지 않아도 주기적으로 데이터를 refetch하는 옵션이다.
+
+기본값은 false이다.
+
+```js
+const { isLoading, data, isError, error, isFetching } = useQuery(
+  "super-heroes",
+  fetchSuperHeroes,
+  {
+    refetchInterval: 2000,
+    refetchIntervalInBackground: true,
+  }
+);
+```
+
+# 10 useQuery on Click
+
+useQuery의 option에 enable속성을 false로 하여 이벤트가 발생할 때에만 데이터를 불러오도록 할 수 있다.
+
+useQuery의 결과 객체의 refetch를 통해서 원하는 시점에 데이터를 불러올 수 있다.
+
+```js
+const { isLoading, data, isError, error, isFetching, refetch } = useQuery(
+  "super-heroes",
+  fetchSuperHeroes,
+  {
+    enabled: false,
   }
 );
 ```
