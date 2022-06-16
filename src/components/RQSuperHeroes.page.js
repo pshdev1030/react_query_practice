@@ -6,14 +6,24 @@ const fetchSuperHeroes = () => {
 };
 
 export const RQSuperHeroesPage = () => {
+  const onSuccess = (data) => {
+    console.log("Perfome side effect after data fetching", data);
+  };
+
+  const onError = (err) => {
+    console.log("Perfome side effect after encountering error", err);
+  };
+
   const { isLoading, data, isError, error, isFetching } = useQuery(
     "super-heroes",
     fetchSuperHeroes,
     {
-      //   // refetchOnMount: true,
-      //   // refetchOnWindowFocus: true,
-      //   // staleTime: 10000,
-      //   // cacheTime: 5000,
+      onSuccess,
+      onError,
+      // refetchOnMount: true,
+      // refetchOnWindowFocus: true,
+      // staleTime: 10000,
+      // cacheTime: 5000,
     }
   );
 

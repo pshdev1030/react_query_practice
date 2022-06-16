@@ -391,3 +391,30 @@ const { isLoading, data, isError, error, isFetching, refetch } = useQuery(
   }
 );
 ```
+
+# Success and Error callbacks
+
+useQuery의 option에 onSuccess, onError속성에 callback function을 전달하여, 각각 fetch 성공, 실패 시 실행할 callback function을 전달할 수 있다. callback function의 parameter는 각각 response, error 객체이다.
+
+```js
+const onSuccess = (data) => {
+  console.log("Perfome side effect after data fetching", data);
+};
+
+const onError = (err) => {
+  console.log("Perfome side effect after encountering error", err);
+};
+
+const { isLoading, data, isError, error, isFetching } = useQuery(
+  "super-heroes",
+  fetchSuperHeroes,
+  {
+    onSuccess,
+    onError,
+    // refetchOnMount: true,
+    // refetchOnWindowFocus: true,
+    // staleTime: 10000,
+    // cacheTime: 5000,
+  }
+);
+```
