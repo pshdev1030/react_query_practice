@@ -233,13 +233,13 @@ export const RQSuperHeroesPage = () => {
 };
 ```
 
-# React Query Devtools
+# 5. React Query Devtools
 
 react query는 디버깅 도구를 제공한다.
 
 열려있는 초기상태롣 되어있을지와 위치등 속성을 지정할 수 있다.
 
-```js
+```jsx
 import { ReactQueryDevtools } from "react-query/devtools";
 
 const queryClient = new QueryClient();
@@ -247,7 +247,7 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      {/*...*/}
+      // ...
       <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
     </QueryClientProvider>
   );
@@ -255,3 +255,36 @@ function App() {
 
 export default App;
 ```
+
+# 6. Query Cache
+
+기본적으로 모든 쿼리 요청은 5분씩 캐싱된다.
+
+때문에 네트워크로의 요청을 줄일 수 있다.
+
+또한 매번 요청을 받아오게 되면 로딩창을 보아야하는데, 캐시해둔 데이터를 보여주고 업데이트 사항은 백그라운드에서 받아와 변경사항만 적용하기 때문에 더 좋은 유저 경험을 제공한다.
+
+서버에 요청해서 데이터를 가져왔는지 여부는 useQuery에서 반환되는 객체의 `isFetching` 속성을 통해 확인할 수 있다.
+
+`isFetching`이 false일 경우 캐시된 데이터를 가져온 것이다.
+
+또한 디버깅 도구에서 캐시에 대한 정보도 확인할 수 있으며 캐시 정책 또한 지정할 수 있다.
+
+캐시 정책을 지정하는 방법은 useQuery의 3번쨰 option parameter를 통해 전달할 수 있다.
+
+```js
+export const RQSuperHeroesPage = () => {
+  const { isLoading, data, isError, error } = useQuery(
+    "super-heroes",
+    fetchSuperHeroes,
+    {
+      cacheTime: 5000,
+    }
+  );
+  // ...
+};
+```
+
+쿼리가 활성화되어 있을 경우 Observer를 통해 캐시를 유지한다.
+
+캐시가 활성화 상태에서 벗어날 경우 GC의 대상이 되며 cacheTime(5000ms) 뒤에 캐시도 삭제된다.
