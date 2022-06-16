@@ -144,3 +144,91 @@ export const RQSuperHeroesPage = () => {
 ```
 
 `2`의 코드에 비해 관심사가 잘 분리되었으며 컴포넌트의 코드도 깔끔해졌음을 알 수 있다.
+
+# 4 Handling Query Error
+
+useEffect와 useState를 이용하여 에러를 처리하는 방식(패턴)은 보통 다음과 같이 작성된다.
+
+useState를 이용하여 에러 상태(error)를 정의하고 useEffect의 fetch 부분에서 catchblock을 통해 에러가 발생했을 경우 loading과 error를 설정해준다.
+
+```jsx
+import { useState, useEffect } from "react";
+import axios from "axios";
+
+export const SuperHeroesPage = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState([]);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:4000/superheroes")
+      .then((res) => {
+        setData(res.data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message);
+        setIsLoading(false);
+      });
+  }, []);
+
+  if (isLoading) {
+    return <h2>Loading...</h2>;
+  }
+
+  if (error) {
+    return <h2>{error}</h2>;
+  }
+
+  return (
+    <>
+      <h2>Super Heroes Page</h2>
+      {data.map((hero) => {
+        return <div>{hero.name}</div>;
+      })}
+    </>
+  );
+};
+```
+
+react-query가 제공하는 useQuery의 반환객체는 error도 가지고 있다.
+
+이를 구조분해 할당을 통해 가져온다.
+
+error 객체와 error의 발생여부를 가져오면 된다.
+
+뿐만 아니라 요청에 실패했을 경우 react-query에서 자동으로 다시 fetch한다.
+
+```js
+import { useQuery } from "react-query";
+import axios from "axios";
+
+const fetchSuperHeroes = () => {
+  return axios.get("http://localhost:4000/superheroes");
+};
+
+export const RQSuperHeroesPage = () => {
+  const { isLoading, data, isError, error } = useQuery(
+    "super-heroes",
+    fetchSuperHeroes
+  );
+
+  if (isLoading) {
+    return <h2>Loading...</h2>;
+  }
+
+  if (isError) {
+    return <h2>{error.message}</h2>;
+  }
+
+  return (
+    <>
+      <h2>React Query Super Heroes Page</h2>
+      {data?.data.map((hero) => {
+        return <div key={hero.name}>{hero.name}</div>;
+      })}
+    </>
+  );
+};
+```
