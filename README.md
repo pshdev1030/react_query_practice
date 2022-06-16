@@ -232,3 +232,26 @@ export const RQSuperHeroesPage = () => {
   );
 };
 ```
+
+# React Query Devtools
+
+react query는 디버깅 도구를 제공한다.
+
+열려있는 초기상태롣 되어있을지와 위치등 속성을 지정할 수 있다.
+
+```js
+import { ReactQueryDevtools } from "react-query/devtools";
+
+const queryClient = new QueryClient();
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      {/*...*/}
+      <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+    </QueryClientProvider>
+  );
+}
+
+export default App;
+```
