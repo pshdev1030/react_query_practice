@@ -20,14 +20,16 @@ export const RQSuperHeroesPage = () => {
     {
       onSuccess,
       onError,
+      select: (data) => {
+        const superHeroNames = data.data.map((hero) => hero.name);
+        return superHeroNames;
+      },
       // refetchOnMount: true,
       // refetchOnWindowFocus: true,
       // staleTime: 10000,
       // cacheTime: 5000,
     }
   );
-
-  console.log(isLoading, isFetching);
 
   if (isLoading) {
     return <h2>Loading...</h2>;
@@ -40,8 +42,12 @@ export const RQSuperHeroesPage = () => {
   return (
     <>
       <h2>React Query Super Heroes Page</h2>
-      {data?.data.map((hero) => {
+      {/* {data?.data.map((hero) => {
         return <div key={hero.name}>{hero.name}</div>;
+      })} */}
+
+      {data.map((heroName) => {
+        return <div key={heroName}>{heroName}</div>;
       })}
     </>
   );

@@ -392,7 +392,7 @@ const { isLoading, data, isError, error, isFetching, refetch } = useQuery(
 );
 ```
 
-# Success and Error callbacks
+# 11 Success and Error callbacks
 
 useQuery의 option에 onSuccess, onError속성에 callback function을 전달하여, 각각 fetch 성공, 실패 시 실행할 callback function을 전달할 수 있다. callback function의 parameter는 각각 response, error 객체이다.
 
@@ -417,4 +417,67 @@ const { isLoading, data, isError, error, isFetching } = useQuery(
     // cacheTime: 5000,
   }
 );
+```
+
+# 12 Data Transformation
+
+프론트와 백엔드에는 각자 다른 컨벤션을 가지고 있는 경우가 있다.
+
+프론트엔드에 필요한 데이터를 위해 서버에서 받은 response를 가공하는 과정이 필요하다.
+
+react query에서는 이를 위한 option을 제공한다.
+
+select를 사용하여 필요한 데이터를 필터링할 수 있다.
+
+```js
+import { useQuery } from "react-query";
+import axios from "axios";
+
+const fetchSuperHeroes = () => {
+  return axios.get("http://localhost:4000/superheroes");
+};
+
+export const RQSuperHeroesPage = () => {
+  const onSuccess = (data) => {
+    console.log("Perfome side effect after data fetching", data);
+  };
+
+  const onError = (err) => {
+    console.log("Perfome side effect after encountering error", err);
+  };
+
+  const { isLoading, data, isError, error, isFetching } = useQuery(
+    "super-heroes",
+    fetchSuperHeroes,
+    {
+      onSuccess,
+      onError,
+      select: (data) => {
+        const superHeroNames = data.data.map((hero) => hero.name);
+        return superHeroNames;
+      },
+    }
+  );
+
+  if (isLoading) {
+    return <h2>Loading...</h2>;
+  }
+
+  if (isError) {
+    return <h2>{error.message}</h2>;
+  }
+
+  return (
+    <>
+      <h2>React Query Super Heroes Page</h2>
+      {/* {data?.data.map((hero) => {
+        return <div key={hero.name}>{hero.name}</div>;
+      })} */}
+
+      {data.map((heroName) => {
+        return <div key={heroName}>{heroName}</div>;
+      })}
+    </>
+  );
+};
 ```
