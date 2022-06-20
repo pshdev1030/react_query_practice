@@ -481,3 +481,36 @@ export const RQSuperHeroesPage = () => {
   );
 };
 ```
+
+# 13 Custom Query Hook
+
+큰 규모의 어플리케이션을 위해서 재사용 할 수 있는 react query hook을 만들면 좋다.
+
+useSuperHeroesData 라는 커스텀 훅을 만들어 다른 컴포넌트에서도 재사용 할 수 있도록 하였다.
+
+```js
+import { useQuery } from "react-query";
+import axios from "axios";
+
+const fetchSuperHeroes = () => {
+  return axios.get("http://localhost:4000/superheroes");
+};
+
+const useSuperHeroesData = (onSuccess, onError, ...option) => {
+  return useQuery("super-heroes", fetchSuperHeroes, {
+    onSuccess,
+    onError,
+    select: (data) => {
+      const superHeroNames = data.data.map((hero) => hero.name);
+      return superHeroNames;
+    },
+    ...option,
+    // refetchOnMount: true,
+    // refetchOnWindowFocus: true,
+    // staleTime: 10000,
+    // cacheTime: 5000,
+  });
+};
+
+export default useSuperHeroesData;
+```

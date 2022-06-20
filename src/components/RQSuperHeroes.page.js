@@ -1,36 +1,18 @@
-import { useQuery } from "react-query";
-import axios from "axios";
+import useSuperHeroesData from "../hooks/useSuperHeroesData";
 
-const fetchSuperHeroes = () => {
-  return axios.get("http://localhost:4000/superheroes");
+const onSuccess = (data) => {
+  console.log("Perfome side effect after data fetching", data);
+};
+
+const onError = (err) => {
+  console.log("Perfome side effect after encountering error", err);
 };
 
 export const RQSuperHeroesPage = () => {
-  const onSuccess = (data) => {
-    console.log("Perfome side effect after data fetching", data);
-  };
-
-  const onError = (err) => {
-    console.log("Perfome side effect after encountering error", err);
-  };
-
-  const { isLoading, data, isError, error, isFetching } = useQuery(
-    "super-heroes",
-    fetchSuperHeroes,
-    {
-      onSuccess,
-      onError,
-      select: (data) => {
-        const superHeroNames = data.data.map((hero) => hero.name);
-        return superHeroNames;
-      },
-      // refetchOnMount: true,
-      // refetchOnWindowFocus: true,
-      // staleTime: 10000,
-      // cacheTime: 5000,
-    }
+  const { isLoading, isError, error, data } = useSuperHeroesData(
+    onSuccess,
+    onError
   );
-
   if (isLoading) {
     return <h2>Loading...</h2>;
   }
