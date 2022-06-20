@@ -514,3 +514,24 @@ const useSuperHeroesData = (onSuccess, onError, ...option) => {
 
 export default useSuperHeroesData;
 ```
+
+# 14 Query by Id
+
+useQuery에는 동적 query Key도 제공할 수 있다.
+
+또한 이 동적 query Key를 observer를 통해 캐싱한다.
+
+```js
+import axios from "axios";
+import { useQuery } from "react-query";
+
+const fetchSuperHero = ({ queryKey }) => {
+  // queryKey === ['super-hero',heroId];
+  const heroId = queryKey[1];
+  return axios.get(`http://localhost:4000/superheroes/${heroId}`);
+};
+
+export const useSuperHeroData = (heroId) => {
+  return useQuery(["super-hero", heroId], fetchSuperHero);
+};
+```
