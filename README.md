@@ -535,3 +535,29 @@ export const useSuperHeroData = (heroId) => {
   return useQuery(["super-hero", heroId], fetchSuperHero);
 };
 ```
+
+# 15 Parrel Queries
+
+두 가지 API를 병렬로 호출해야 할 경우도 지원한다.
+
+useQuery를 여러번 호출하면 된다.
+
+```js
+import { useQuery } from "react-query";
+import axios from "axios";
+
+const fetchSuperHeroes = () => {
+  return axios.get("http://localhost:4000/superheroes");
+};
+
+const fetchFriends = () => {
+  return axios.get("http://localhost:4000/friends");
+};
+
+export const ParallelQueriesPage = () => {
+  const { data: superheroes } = useQuery("super-heroes", fetchSuperHeroes);
+  const { data: friends } = useQuery("friends", fetchFriends);
+
+  return <div>ParallelQueriesPage</div>;
+};
+```
