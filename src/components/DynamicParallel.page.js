@@ -1,8 +1,7 @@
 import { useQueries } from "react-query";
 import axios from "axios";
 
-const fetchSuperHeroes = (queryKey) => {
-  const { id } = queryKey;
+const fetchSuperHeroes = (id) => {
   return axios.get(`http://localhost:4000/superheroes/${id}`);
 };
 
@@ -11,7 +10,7 @@ export const DynamicParallelPage = ({ heroIds }) => {
     heroIds.map((id) => {
       return {
         queryKey: ["super-hero", id],
-        queryFn: fetchSuperHeroes,
+        queryFn: () => fetchSuperHeroes(id),
       };
     })
   );
