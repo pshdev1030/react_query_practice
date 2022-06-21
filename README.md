@@ -561,3 +561,32 @@ export const ParallelQueriesPage = () => {
   return <div>ParallelQueriesPage</div>;
 };
 ```
+
+# 16 Dynamic Parallel Queries
+
+react query의 useQueries을 사용하여 여러개의 fetch를 병렬로 처리할 수 있다.
+
+Dynamic fetch 또한 병렬로 처리할 수 있다.
+
+```js
+import { useQueries } from "react-query";
+import axios from "axios";
+
+const fetchSuperHeroes = (queryKey) => {
+  const { id } = queryKey;
+  return axios.get(`http://localhost:4000/superheroes/${id}`);
+};
+
+export const DynamicParallelPage = ({ heroIds }) => {
+  const queryResults = useQueries(
+    heroIds.map((id) => {
+      return {
+        queryKey: ["super-hero", id],
+        queryFn: fetchSuperHeroes,
+      };
+    })
+  );
+  console.log(queryResults);
+  return <div>ParallelQueriesPage</div>;
+};
+```
