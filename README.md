@@ -590,3 +590,40 @@ export const DynamicParallelPage = ({ heroIds }) => {
   return <div>ParallelQueriesPage</div>;
 };
 ```
+
+# 17 Dependent Queries
+
+다른 API 요청에 의존성을 가지는 요청들이 있다.
+주로 인증과 같은 로직들은 이전 결과를 가지고 요처을 하게 되는데, react query에서는 option의 enabled를 통해 요청에 의존성을 주입할 수 있다.
+
+enabled는 boolean 값이여야 하기 때문에 channelId 앞에 ! 연산자를 두 개 붙여 boolean값으로 형변환 하였다.
+
+```js
+import { useQuery } from "react-query";
+import axios from "axios";
+
+const fetchUserByEmail = (email) => {
+  return axios.get(`http://localhost:4000/users/${email}`);
+};
+
+const fetchCoursesByChannelId = (channelId) => {
+  return axios.get(`http://localhost:4000/channels/${channelId}`);
+};
+
+export const DependentQueriesPage = ({ email }) => {
+  const { data: user } = useQuery(["user", email], () =>
+    fetchUserByEmail(email)
+  );
+
+  const channelId = user?.data.channelId;
+
+  const { data: courses } = useQuery(
+    ["courses", channelId],
+    () => fetchCoursesByChannelId(channelId),
+    {
+      enabled: !!channelId,
+    }
+  );
+  return <div>DependentQueries</div>;
+};
+```
