@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function solution(sticker) {
+        let ansArray = Array.from({ length: sticker.length }, () => 0);
+        let takeFirstHouse = Number.MIN_SAFE_INTEGER;
+        let notTakeFirstHouse = Number.MIN_SAFE_INTEGER;
+
+        ansArray[0] = sticker[0];
+        ansArray[1] = ansArray[0];
+        for (let i = 2; i < sticker.length - 1; i++) {
+          ansArray[i] = Math.max(
+            ansArray[i - 1],
+            ansArray[i - 2] + ansArray[i]
+          );
+        }
+
+        takeFirstHouse = Math.max(...ansArray);
+
+        ansArray = Array.from({ length: sticker.length }, () => 0);
+        ansArray[1] = sticker[1];
+        for (let i = 2; i < sticker.length; i++) {
+          ansArray[i] = Math.max(ansArray[i - 1], ansArray[i - 2] + sticker[i]);
+        }
+        notTakeFirstHouse = Math.max(...ansArray);
+
+        return Math.max(takeFirstHouse, notTakeFirstHouse);
+      }
+
+      console.log(solution([14, 6, 5, 11, 3, 9, 2, 10]));
+    </script>
+  </body>
+</html>

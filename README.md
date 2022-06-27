@@ -627,3 +627,41 @@ export const DependentQueriesPage = ({ email }) => {
   return <div>DependentQueries</div>;
 };
 ```
+
+# 18 Initial Query Data
+
+페이지에 진입할떄의 초기 데이터(initial Data)를 지정할 수 있다.
+
+캐시되어있는 데이터를 사용할 수도 있다.
+
+queryClient를 통해 캐시되어있는 데이터에 접근하여 초기데이터를 설정하였다.
+
+```js
+import axios from "axios";
+import { useQuery, useQueryClient } from "react-query";
+
+const fetchSuperHero = ({ queryKey }) => {
+  const heroId = queryKey[1];
+  return axios.get(`http://localhost:4000/superheroes/${heroId}`);
+};
+
+export const useSuperHeroData = (heroId) => {
+  const queryClient = useQueryClient();
+  return useQuery(["super-hero", heroId], fetchSuperHero, {
+    initialData: () => {
+      const hero = queryClient
+        .getQueryData("super-heroes")
+        ?.data?.find((hero) => hero.id === heroId);
+
+      if (hero) {
+        return {
+          data: hero,
+        };
+      } else {
+        return undefined;
+        // react-query에서는 loading 상태로 간주한다.
+      }
+    },
+  });
+};
+```

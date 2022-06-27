@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function solution(board) {
+        let m = board.length;
+        let n = board[0].length;
+        let dir = [
+          [1, 0],
+          [0, 1],
+          [-1, 0],
+          [0, -1],
+        ];
+        const check = Array.from({ length: m }, () => Array(n).fill(false));
+        let answer = -1;
+        const isValidIndex = (x, y) => 0 <= x && x < n && 0 <= y && y < m;
+
+        const isWay = (x, y) => check[y][x] === false;
+
+        const isSameColor = (x1, y1, x2, y2) => board[y1][x1] === board[y2][x2];
+
+        function dfs(x, y, level) {
+          if (level >= 2) {
+            answer = Math.max(answer, level);
+          }
+          {
+            for (let i = 0; i < dir.length; i++) {
+              let nx = x + dir[i][0];
+              let ny = y + dir[i][1];
+              if (
+                isValidIndex(nx, ny) &&
+                isWay(nx, ny) &&
+                isSameColor(x, y, nx, ny)
+              ) {
+                check[y][x] = true;
+                dfs(nx, ny, level + 1);
+                check[y][x] = false;
+              }
+            }
+          }
+        }
+
+        for (let i = 0; i < m; i++) {
+          for (let j = 0; j < n; j++) {
+            dfs(i, j, 1);
+          }
+        }
+
+        return answer;
+      }
+      console.log(
+        solution([
+          [3, 2, 3, 2],
+          [2, 1, 1, 2],
+          [1, 1, 2, 1],
+          [4, 1, 1, 1],
+        ])
+      );
+    </script>
+  </body>
+</html>
