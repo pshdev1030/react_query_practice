@@ -14,6 +14,11 @@
       "id": 3,
       "name": "Wonder Woman",
       "alterEgo": "Princess Diana"
+    },
+    {
+      "name": "ㅁㄴㅇㄹ",
+      "alterEgo": "ㅁㄴㅇㄹ",
+      "id": 4
     }
   ],
   "friends": [
@@ -30,9 +35,21 @@
       "name": "Rachel Green"
     }
   ],
-  "users": [{ "id": "vishwas@example.com", "channelId": "codevolution" }],
+  "users": [
+    {
+      "id": "vishwas@example.com",
+      "channelId": "codevolution"
+    }
+  ],
   "channels": [
-    { "id": "codevolution", "courses": ["react", "vue", "angular"] }
+    {
+      "id": "codevolution",
+      "courses": [
+        "react",
+        "vue",
+        "angular"
+      ]
+    }
   ],
   "colors": [
     {

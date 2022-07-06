@@ -816,3 +816,32 @@ export const InfiniteQueriesPage = () => {
   );
 };
 ```
+
+# 21 Mutation
+
+데이터를 생성,업데이트,삭제할 때에 사용할 수 있다.
+
+optimistic ui를 적용 하는데에 사용 가능할 것 같다.
+
+이런 커스텀훅을 정의하고
+
+```js
+const addSuperHero = (hero) => {
+  return axios.post("http://localhost:4000/superheroes", hero);
+};
+
+export const useAddSuperHeroData = () => {
+  return useMutation(addSuperHero);
+};
+```
+
+컴포넌트에서는 다음과 같이 사용한다.
+
+```js
+const { mutate: addHero } = useAddSuperHeroData();
+
+const handleAddHeroClick = () => {
+  const hero = { name, alterEgo };
+  addHero(hero);
+};
+```
