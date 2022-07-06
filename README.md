@@ -845,3 +845,20 @@ const handleAddHeroClick = () => {
   addHero(hero);
 };
 ```
+
+# 22 Query Invalidation
+
+queryInvalidation은쿼리를 무효화하고(stale하지 않은 쿼리로 표시) 다시 fetch하는데에 사용된다.
+
+useMutaion의 option객체에 onSuccess의 callback으로 제공하여 데이터가 mutate된 후 자동으로 refetch 되도록 하였다.
+
+```js
+export const useAddSuperHeroData = () => {
+  const queryClient = useQueryClient();
+  return useMutation(addSuperHero, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("super-heroes");
+    },
+  });
+};
+```
